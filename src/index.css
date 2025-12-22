@@ -6,6 +6,8 @@
 
 html {
   font-size: 62.5%;
+  height: 100vh;
+    background: var(--gray-900);
 }
 
 body {

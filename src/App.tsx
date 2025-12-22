@@ -1,14 +1,19 @@
 import { Container } from './components/Container'
-import { Heading } from './components/Heading'
-
+import { Countdown } from './components/Countdown'
+import { Logo } from './components/Logo'
+import { Menu } from './components/Menu'
 export const App = () => {
   return (
-    <>
+    <div>
       <Container>
-        <Heading>Teste</Heading>
-        <section>Logo</section>
+        <Logo />
       </Container>
-      <Container>Menu</Container>
-    </>
+      <Container>
+        <Menu />
+      </Container>
+      <Container>
+        <Countdown />
+      </Container>
+    </div>
   )
 }
