@@ -9,7 +9,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--primary-dark);
+  background-color: var(--primary);
   color: var(--text-over-primary);
   text-decoration: none;
   transition: all .1s ease-in-out;
