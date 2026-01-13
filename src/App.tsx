@@ -6,9 +6,10 @@ import { DefaultButton } from './components/DefaultButton'
 import { DefaultInput } from './components/DefaultInput'
 import { Logo } from './components/Logo'
 import { Menu } from './components/Menu'
+import { Footer } from './components/Footer'
 export const App = () => {
   return (
-    <Container>
+    <>
       <Container>
         <Logo />
       </Container>
@@ -19,23 +20,29 @@ export const App = () => {
         <Countdown />
       </Container>
 
-      <form action="" className="form">
-        <div className="formRow">
-          <DefaultInput id="input" type="text" labelText="task" />
-        </div>
+      <Container>
+        <form action="" className="form">
+          <div className="formRow">
+            <DefaultInput id="input" type="text" labelText="task" />
+          </div>
 
-        <div className="formRow">
-          <p>Lorem ipsum dolor sit amet.</p>
-        </div>
+          <div className="formRow">
+            <p>Lorem ipsum dolor sit amet.</p>
+          </div>
 
-        <div className="formRow">
-          <Cycles />
-        </div>
+          <div className="formRow">
+            <Cycles />
+          </div>
 
-        <div className="formRow">
-          <DefaultButton icon={<PlayCircleIcon />} />
-        </div>
-      </form>
-    </Container>
+          <div className="formRow">
+            <DefaultButton icon={<PlayCircleIcon />} />
+          </div>
+        </form>
+      </Container>
+
+      <Container>
+        <Footer />
+      </Container>
+    </>
   )
 }
