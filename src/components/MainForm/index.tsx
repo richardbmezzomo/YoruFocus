@@ -1,4 +1,4 @@
-import { PlayCircleIcon } from 'lucide-react'
+import { PlayCircleIcon, StopCircleIcon } from 'lucide-react'
 import { Cycles } from '../Cycles'
 import { DefaultButton } from '../DefaultButton'
 import { DefaultInput } from '../DefaultInput'
@@ -6,10 +6,16 @@ import { useRef } from 'react'
 import { toast } from 'react-toastify'
 import { TaskModel } from '../../models/TaskModel'
 import { useTaskContext } from '../../contexts/TaskContext/useTaskContext'
+import { getNextCycle } from '../../utils/getNextCycle'
+import { getNextCycleType } from '../../utils/getNextCycleType'
+import { formatSecondsToMinutes } from '../../utils/formatSecondsToMinutes'
 
 export const MainForm = () => {
-  const { setState } = useTaskContext()
+  const { state, setState } = useTaskContext()
   const taskNameInput = useRef<HTMLInputElement>(null)
+
+  const nextCycle = getNextCycle(state.currentCycle)
+  const nextCycleType = getNextCycleType(nextCycle)
 
   const handleCreateTask = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -26,11 +32,11 @@ export const MainForm = () => {
     const newTask: TaskModel = {
       id: Date.now().toString(),
       name: taskName,
-      duration: 1,
+      duration: state.config[nextCycleType],
       startDate: Date.now(),
       completeDate: null,
       interruptDate: null,
-      type: 'workTime'
+      type: nextCycleType
     }
 
     const secondsRemaining = newTask.duration * 60
@@ -38,13 +44,21 @@ export const MainForm = () => {
     setState(prevState => ({
       ...prevState,
       activeTask: newTask,
-      currentCycle: 1,
+      currentCycle: nextCycle,
       secondsRemaining,
-      formatedSecondsRemaining: '00:00',
+      formatedSecondsRemaining: formatSecondsToMinutes(secondsRemaining),
       tasks: [...prevState.tasks, newTask]
     }))
   }
 
+  const handleInterruptTask = () => {
+    setState(prevState => ({
+      ...prevState,
+      activeTask: null,
+      secondsRemaining: 0,
+      formatedSecondsRemaining: '00:00'
+    }))
+  }
   return (
     <>
       <form onSubmit={handleCreateTask} className="form">
@@ -54,6 +68,7 @@ export const MainForm = () => {
             type="text"
             labelText="task"
             ref={taskNameInput}
+            disabled={!!state.activeTask}
           />
         </div>
 
@@ -61,12 +76,31 @@ export const MainForm = () => {
           <p>Lorem ipsum dolor sit amet.</p>
         </div>
 
-        <div className="formRow">
-          <Cycles />
-        </div>
+        {state.currentCycle > 0 && (
+          <div className="formRow">
+            <Cycles />
+          </div>
+        )}
 
         <div className="formRow">
-          <DefaultButton icon={<PlayCircleIcon />} />
+          {!state.activeTask && (
+            <DefaultButton
+              type="submit"
+              aria-label="Iniciar tarefa"
+              title="Iniciar tarefa"
+              icon={<PlayCircleIcon />}
+            />
+          )}
+          {state.activeTask && (
+            <DefaultButton
+            onClick={handleInterruptTask}
+              type="button"
+              aria-label="Pausar tarefa"
+              title="Pausar tarefa"
+              state="stop"
+              icon={<StopCircleIcon />}
+            />
+          )}
         </div>
       </form>
     </>
